@@ -34,33 +34,12 @@ for n in range(22):
 
     product_cards = driver.find_elements(By.CLASS_NAME, "product-data")
     product_cards = [(product_card.find_element(By.CLASS_NAME,"product-name" ).text, product_card.find_element(By.CLASS_NAME,"product-price" )
-                      .text.replace("₦,", ""))
-                     for product_card in product_cards]
+                      .text) for product_card in product_cards]
     for product_card in product_cards:
         name = product_card[0]
-        price = product_card[1]
-
+        price = product_card[1].replace(",", "").replace("₦","")
         with open("perfume.csv", "+a", encoding="UTF-16") as file:
             file.write(f"{name},{price}\n",)
-    print(f"PAGES SCRAPPED {n}/22")
-
-import re
-
-# PROCESSING THE PRICES
-
-with open('perfume.csv', 'r', encoding='UTF-16') as f:
-    lines = f.readlines()
-
-fixed_lines = []
-for line in lines:
-    line = line.strip()
-    # REPLACE COMMAS BETWEEN DIGITS WITH NOTHING
-    fixed_line = re.sub(r'(?<=\d),(?=\d)', '', line)
-    fixed_lines.append(fixed_line)
-
-# STEP 3: Save to a new CSV
-with open("perfume.csv", "W", encoding="UTF-16") as f:
-    for fixed_line in fixed_lines:
-        f.write(fixed_line.replace("₦","") + '\n')
+    print(f"PAGES SCRAPPED {n+1}/22")
 
 print("SUCCESSFULLY RAN TO COMPLETION")
